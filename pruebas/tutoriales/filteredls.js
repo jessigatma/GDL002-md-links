@@ -27,15 +27,15 @@ fs.readdir(process.argv[2], function(err,data){
 
 
 
-// // const fs = require('fs');
-// // const path = require('path');
+// const fs = require('fs');
+// const path = require('path');
 
-// // const filtered =
-// // fs.readdir(process.argv[2], function(err,data){
-// //     data.filter(function(dat){
-// //              return path.extname(dat)=== '.' + process.argv[3]; })
-// //     .forEach(function(dat){console.log(dat)});
-// // });
+// const filtered =
+// fs.readdir(process.argv[2], function(err,data){
+//     data.filter(function(dat){
+//              return path.extname(dat)=== '.' + process.argv[3]; })
+//     .forEach(function(dat){console.log(dat)});
+// });
 
 // var fs = require('fs')
 // var path = require('path')
