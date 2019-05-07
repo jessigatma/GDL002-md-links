@@ -131,7 +131,7 @@ const linksStats = (pathName) => {
           console.log('error', response.status);
         }
         if (wrongLinks + rightLinks === readAllFiles.length) {
-          console.log(`File: ${pathName} has:`);
+          console.log(`File: ${pathName} tiene:`);
           console.log(`✔ Total Links: ${readAllFiles.length}`);
           console.log(`✔ Total Unique Links: ${rightLinks}`);
           console.log(`✖ Total Broken links: ${wrongLinks}\n`);
