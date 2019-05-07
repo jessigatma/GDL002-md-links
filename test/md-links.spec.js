@@ -1,4 +1,10 @@
-const mdLinks = require('../src/main')
+const {findFileMd,
+  fileOrDirectory,
+  absolutePath,
+  lookForLinks,
+  readFileMd,
+  pathsStatus,
+  linksStats}= require('../src/main')
 
 test('should be a file Markdown', done => {
   function callback(data){

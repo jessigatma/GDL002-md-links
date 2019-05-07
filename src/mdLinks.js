@@ -87,59 +87,74 @@ const readFileMd = (pathName) => {
 
 //--------------------MUESTRA EL STATUS DE LOS LINKS OBTENIDOS -----------
 const pathsStatus = (pathName) => {
-  fs.readFile(pathName, function (err, data) {
-    if (err) {
-      return (err);
-    }
-    readAllFiles = lookForLinks(pathName, data);
-    for (let i = 0; i < readAllFiles.length; i++) {
-      fetch(readAllFiles[i].href).then(response => {
-        if (response.status == 200) {
-          console.log(chalk.blue(
-            `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
+    fs.readFile(pathName, function (err, data) {
+      if (err) {
+        return (err);
+      }
+      readAllFiles = lookForLinks(pathName, data);
+      for (let i = 0; i < readAllFiles.length; i++) {
+        fetch(readAllFiles[i].href).then(response => {
+          if (response.status == 200) {
+            console.log(chalk.blue(
+              `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
                readAllFiles[i].href
              }\n  Código de Respuesta: ${response.status}\n Respuesta: ${response.statusText}\n`,
-          ));
-        } else if (response.status == 404 || response.status == 400) {
-          console.log( chalk.yellow(
-            `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
+            ));
+          } else if (response.status == 404 || response.status == 400) {
+            console.log(chalk.yellow(
+              `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
                readAllFiles[i].href
              }\n Código de Respuesta: ${response.status}\n Respuesta: ${response.statusText}\n`,
-          ));
-        }
-      });
-    }
-  })
+            ));
+          }
+        });
+      }
+    })
 };
 
 //----------- MUESTRA EL TOTAL DE LINKS  ENCONTRADOS (ESTADÍSTICAS DE LINKS)------------------
 const linksStats = (pathName) => {
-  fs.readFile(pathName, function (err, data) {
-    if (err) {
-      return (err);
-    }
-    console.log(`File: ${pathName} tiene:`);
-    readAllFiles = lookForLinks(pathName, data);
-    let wrongLinks = 0;
-    let rightLinks = 0;
-    for (let i = 0; i < readAllFiles.length; i++) {
-      fetch(readAllFiles[i].href).then(response => {
-        if (response.status == 200) {
-          rightLinks++;
-        } else if (response.status == 404 || response.status == 400) {
-          wrongLinks++;
-        } else {
-          console.log('error', response.status);
-        }
-        if (wrongLinks + rightLinks === readAllFiles.length) {
-          console.log(`File: ${pathName} tiene:`);
-          console.log(chalk.magenta(`✔ Total de Links: ${readAllFiles.length}`));
-          console.log(chalk.green(`✔ Total de Links funcionando: ${rightLinks}`));
-          console.log(chalk.red(`✖ Total de Links rotos: ${wrongLinks}\n`));
-        }
-      });
-    }
+  return new Promise((resolve, reject) => {
+    fs.readFile(pathName, function (err, data) {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data.toString());
+      console.log(`File: ${pathName} tiene:`);
+      readAllFiles = lookForLinks(pathName, data);
+      let wrongLinks = 0;
+      let rightLinks = 0;
+      for (let i = 0; i < readAllFiles.length; i++) {
+        fetch(readAllFiles[i].href).then(response => {
+          if (response.status == 200) {
+            rightLinks++;
+          } else if (response.status == 404 || response.status == 400) {
+            wrongLinks++;
+          } else {
+            console.log('error', response.status);
+          }
+          if (wrongLinks + rightLinks === readAllFiles.length) {
+            console.log(`File: ${pathName} tiene:`);
+            console.log(chalk.magenta(`✔ Total de Links: ${readAllFiles.length}`));
+            console.log(chalk.green(`✔ Total de Links funcionando: ${rightLinks}`));
+            console.log(chalk.red(`✖ Total de Links rotos: ${wrongLinks}\n`));
+          }
+        });
+      }
+    })
   })
+}
+
+function menuOptions() {
+  if (options === '--validate') {
+    console.log(readFileMd(pathName));
+  } else if (options === '--stats') {
+    //  stats.statsLinks(urlArray);
+    console.log(pathsStatus(pathName));
+  } else if (options === '--validate--stats') {
+    //  stats.validateStats(urlArray);
+    console.log(linksStats(pathName));
+  }
 }
 
 module.exports = {
@@ -150,4 +165,5 @@ module.exports = {
   readFileMd,
   pathsStatus,
   linksStats
+  //menuOptions
 }
