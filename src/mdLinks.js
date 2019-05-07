@@ -96,13 +96,13 @@ const pathsStatus = (pathName) => {
         if (response.status == 200) {
           console.log(
             `File: ${pathName}\n Text:${readAllFiles[i].text}\n href: ${
-               readAllFiles[0].href
+               readAllFiles[i].href
              }\n  Response code: ${response.status}\nResponse: ${response.statusText}\n`,
           );
         } else if (response.status == 404 || response.status == 400) {
           console.log(
             `File: ${pathName}\n Text:${readAllFiles[i].text}\n href: ${
-               readAllFiles[0].href
+               readAllFiles[i].href
              }\n Response code: ${response.status}\n Response: ${response.statusText}\n`,
           );
         }
