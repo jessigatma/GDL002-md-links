@@ -95,15 +95,15 @@ const pathsStatus = (pathName) => {
       fetch(readAllFiles[i].href).then(response => {
         if (response.status == 200) {
           console.log(
-            `File: ${pathName}\n Text:${readAllFiles[i].text}\n href: ${
+            `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
                readAllFiles[i].href
-             }\n  Response code: ${response.status}\nResponse: ${response.statusText}\n`,
+             }\n  Código de Respuesta: ${response.status}\n Respuesta: ${response.statusText}\n`,
           );
         } else if (response.status == 404 || response.status == 400) {
           console.log(
-            `File: ${pathName}\n Text:${readAllFiles[i].text}\n href: ${
+            `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
                readAllFiles[i].href
-             }\n Response code: ${response.status}\n Response: ${response.statusText}\n`,
+             }\n Código de Respuesta: ${response.status}\n Respuesta: ${response.statusText}\n`,
           );
         }
       });
@@ -132,9 +132,9 @@ const linksStats = (pathName) => {
         }
         if (wrongLinks + rightLinks === readAllFiles.length) {
           console.log(`File: ${pathName} tiene:`);
-          console.log(`✔ Total Links: ${readAllFiles.length}`);
-          console.log(`✔ Total Unique Links: ${rightLinks}`);
-          console.log(`✖ Total Broken links: ${wrongLinks}\n`);
+          console.log(`✔ Total de Links: ${readAllFiles.length}`);
+          console.log(`✔ Total de Links funcionando: ${rightLinks}`);
+          console.log(`✖ Total de Links rotos: ${wrongLinks}\n`);
         }
       });
     }
