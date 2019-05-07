@@ -4,6 +4,7 @@ const mymodule = require ('./module');
  const ruta = process.argv[2];
 
 mymodule(ruta, ext, (err,resp)=>{
+    //console.log(resp);
     console.log(resp.join('\n'));
 });
 

@@ -1,42 +1,182 @@
 const fs = require('fs');
 const path = require('path');
-let path1 = "./texto.txt";
-let pathNew= process.argv[2];
+const fetch = require('node-fetch');
 
-function fileMd (pathNew){
-fs.readdir(process.argv[2], function(err,data){
-    //console.log(data);
-     data.forEach(function(dat){
-        if (path.extname(dat)=== '.txt'){
-            console.log(dat);
-            //console.log(path.extname(dat));
+//let readAllFile;
+
+//Me dice si mi link es archivo o directorio
+const fileOrDirectory = pathName => {
+  return new Promise((resolve, reject) => {
+    fs.lstat(pathName, (err, stats) => {
+      if (err) {
+        if (err.code === 'ENOENT') {
+          resolve(false);
+        } else {
+          reject(err);
         }
+      }
+      if (stats.isDirectory()) {
+        console.log(`${pathName} Es un directorio`);
+        return true;
+      }
+      if (stats.isFile()) {
+        console.log(`${pathName} Es un archivo`);
+        //console.log(path.resolve(pathName));
+        resolve(stats.isFile());
+      }
     });
-});
+  });
 };
-const fileOrDir = 
-fs.lstat(path1, (err, stats) => {
-    if(err)
-        return console.log(err); //Handle error
-    console.log(`Is file: ${stats.isFile()}`);
-    console.log(`Is directory: ${stats.isDirectory()}`);
-});
 
-const fileExist = 
-fs.access(path1, fs.F_OK, (err) => {
-  if (err) {
-    console.error(err)
-    return
+// Me muestra los archivos con la extensión md
+const findFileMd = pathName => {
+  fs.readdir(pathName, function (err, data) {
+    //console.log(err,data);
+    data.forEach(function (dat) {
+      if (path.extname(dat) === '.md') {
+        console.log('En este directorio existen los siguientes archivos con extensión .md: ' + dat);
+        return true;
+        //console.log(path.extname(dat));
+      }
+    });
+  });
+}
+
+//Muestra si la ruta es absoluta
+const absolutePath = pathName => {
+  if (path.isAbsolute(pathName)) {
+    console.log('path is absolute');
+    return true;
+  } else {
+    console.log('path is not absolute');
+    return false;
   }
-    console.log('file exists');
-})
+};
 
-// if(path.isAbsolute(path1)) {
-//    console.log('¡Es absoluta!');
-// } else{
-//     path.isRelative(path1)
+const readFileMd = pathName => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(pathName, 'utf8', function (err, data) {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data); {
+       
+    });
+  }); //promise
+}
+
+const pathStatus = (pathName) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(pathName, function (err, data) {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data.toString());
+      console.log('Links encontrados: ');
+      readAllFile = lookForLinks(pathName, data);
+      //console.log(readAllFile);
+      for (let i = 0; i < returnArray.length; i++) {
+        fetch(pathName[i].href).then(response => {
+          if (response.status == 200) {
+            console.log(
+              `File: ${pathName}\n Text:${returnArray[i].text}\n Link: ${
+              returnArray[0].href
+            }\n  Response code: ${response.status}\nResponse: ${response.statusText}\n`,
+            );
+          } else if (response.status == 404 || response.status == 400) {
+            console.log(
+              `File: ${pathName}\n Text:${returnArray[i].text}\n Link: ${
+              returnArray[0].href
+            }\n Response code: ${response.status}\nResponse: ${response.statusText}\n`,
+            );
+          }
+        });
+      }
+    });
+  });
+}
+
+
+const linksStats = (pathName) => {
+  return new Promise((resolve, reject) => {
+    fs.readFile(pathName, function (err, data) {
+      if (err) {
+        return reject(err);
+      }
+      resolve(data.toString());
+      console.log(`File: ${pathName} has:`);
+      readAllFile = lookForLinks(pathName, data);
+
+      let wrongLinks = 0;
+      let rightLinks = 0;
+      for (let i = 0; i < readAllFile.length; i++) {
+        fetch(readAllFile[i].href).then(response => {
+          if (response.status == 200) {
+            rightLinks++;
+          } else if (response.status == 404 || response.status == 400) {
+            wrongLinks++;
+          } else {
+            console.log('error', response.status);
+          }
+          if (wrongLinks + rightLinks === readAllFile.length) {
+            console.log(`File: ${pathName} has:`);
+            console.log(`✔ Total Links: ${readAllFile.length}`);
+            console.log(`✔ Total Unique Links: ${rightLinks}`);
+            console.log(`✖ Total Broken links: ${wrongLinks}\n`);
+          }
+        });
+      }
+    });
+  });
+}
+
+
+module.exports = {
+  fileOrDirectory,
+  findFileMd,
+  absolutePath,
+  readFileMd
+};
+
+//[prueba](https://comosonklmikar.com)
+// const readFileMd = pathName => {
+//   fs.readFile(pathName, 'utf8', function (err, data) {
+//      if (err) {
+//        return (err);
+//      }{
+//      const regExpText = /(?:[^[])([^[]*)(?=(\]+\(((https?:\/\/)|(http?:\/\/)|(www\.))))/g; // /g es global
+//      const regExpLink = /(((https?:\/\/)|(http?:\/\/)|(www\.))[^\s\n)]+)(?=\))/g;
+//      //console.log(total);
+//      const textMatch = data.match(regExpText); //cada línea hace match con regExpText
+//      const linkMatch = data.match(regExpLink);
+//      let returnArray = [];
+//      for (let i = 0; i < linkMatch.length; i++) {
+//        let linkData = {
+//          href: linkMatch[i],
+//          text: textMatch[i],
+//          file: pathName,
+//        };
+//        returnArray.push(linkData);
+//      }
+//    //console.log(returnArray);
+//    for (let i = 0; i < returnArray.length; i++) {
+//        fetch(returnArray[i].href).then(response => {
+//          if (response.status == 200) {
+//            console.log(
+//              `File: ${pathName}\n Text:${returnArray[i].text}\n href: ${
+//                returnArray[0].href
+//              }\n  Response code: ${response.status}\nResponse: ${response.statusText}\n`,
+//            );
+//          } else if (response.status == 404 || response.status == 400) {
+//            console.log(
+//              `File: ${pathName}\n Text:${returnArray[i].text}\n href: ${
+//                returnArray[0].href
+//              }\n Response code: ${response.status}\n Response: ${response.statusText}\n`,
+//            );
+//          }
+//        });
+//      }
+//     }
+   
+//    });
 // }
-//////////////////////////////////////////
-module.exports = {fileMd,
-    fileOrDir, 
-    fileExist}

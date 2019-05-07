@@ -1,8 +1,8 @@
 const fs = require('fs');
 const path = require('path');
     
-// const ruta = process.argv[2];
-// const ext = process.argv[3];
+ //const ruta = process.argv[2];
+ //const ext = process.argv[3];
 
 module.exports = function (ruta, ext, callback){
         fs.readdir(ruta, function(err,data){

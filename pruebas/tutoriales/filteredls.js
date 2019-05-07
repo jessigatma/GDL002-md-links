@@ -3,6 +3,7 @@ const path = require('path');
 
 const filtered =
 fs.readdir(process.argv[2], function(err,data){
+    //console.log(data);
      data.forEach(function(dat){
         if (path.extname(dat)=== '.' + process.argv[3]){
             console.log(dat);
