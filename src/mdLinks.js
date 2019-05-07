@@ -1,6 +1,7 @@
 const fs = require('fs');
 const path = require('path');
 const fetch = require('node-fetch');
+const chalk = require('chalk');
 let readAllFiles;
 
 //------------ME MUESTRA LOS ARCHIVO CON EXTENSIÓN MD-------------
@@ -8,7 +9,7 @@ const findFileMd = pathName => {
   fs.readdir(pathName, function (err, data) {
     data.forEach(function (dat) {
       if (path.extname(dat) === '.md') {
-        console.log(`En este directorio existen los siguiente archivos con extensión md: ${dat} \n`)
+        console.log(chalk.magenta(`En este directorio existen los siguiente archivos con extensión md: ${dat} \n`));
         return true;
       }
     })
@@ -28,11 +29,11 @@ const fileOrDirectory = pathName => {
         }
       }
       if (stats.isDirectory()) {
-        console.log(`${pathName} Es un directorio \n`);
+        console.log(chalk.yellowBright(`${pathName} Es un directorio \n`));
         return true;
       }
       if (stats.isFile()) {
-        console.log(`${pathName} Es un archivo \n`);
+        console.log(chalk.greenBright(`${pathName} Es un archivo \n`));
         resolve(stats.isFile());
       }
     });
@@ -42,10 +43,10 @@ const fileOrDirectory = pathName => {
 //-------------ME DICE SI MI RUTA ES ABSOLUTA O NO--------------
 const absolutePath = pathName => {
   if (path.isAbsolute(pathName)) {
-    console.log('La ruta es absoluta');
+    console.log(chak.magenta('La ruta es absoluta'));
     return true;
   } else {
-    console.log('la ruta NO es absoluta');
+    console.log(chalk.magenta('la ruta NO es absoluta'));
     return false;
   }
 };
@@ -94,17 +95,17 @@ const pathsStatus = (pathName) => {
     for (let i = 0; i < readAllFiles.length; i++) {
       fetch(readAllFiles[i].href).then(response => {
         if (response.status == 200) {
-          console.log(
+          console.log(chalk.blue(
             `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
                readAllFiles[i].href
              }\n  Código de Respuesta: ${response.status}\n Respuesta: ${response.statusText}\n`,
-          );
+          ));
         } else if (response.status == 404 || response.status == 400) {
-          console.log(
+          console.log( chalk.yellow(
             `Archivo: ${pathName}\n Texto:${readAllFiles[i].text}\n href: ${
                readAllFiles[i].href
              }\n Código de Respuesta: ${response.status}\n Respuesta: ${response.statusText}\n`,
-          );
+          ));
         }
       });
     }
@@ -132,9 +133,9 @@ const linksStats = (pathName) => {
         }
         if (wrongLinks + rightLinks === readAllFiles.length) {
           console.log(`File: ${pathName} tiene:`);
-          console.log(`✔ Total de Links: ${readAllFiles.length}`);
-          console.log(`✔ Total de Links funcionando: ${rightLinks}`);
-          console.log(`✖ Total de Links rotos: ${wrongLinks}\n`);
+          console.log(chalk.magenta(`✔ Total de Links: ${readAllFiles.length}`));
+          console.log(chalk.green(`✔ Total de Links funcionando: ${rightLinks}`));
+          console.log(chalk.red(`✖ Total de Links rotos: ${wrongLinks}\n`));
         }
       });
     }
