@@ -43,7 +43,7 @@ const fileOrDirectory = pathName => {
 //-------------ME DICE SI MI RUTA ES ABSOLUTA O NO--------------
 const absolutePath = pathName => {
   if (path.isAbsolute(pathName)) {
-    console.log(chak.magenta('La ruta es absoluta'));
+    console.log(chalk.magenta('La ruta es absoluta'));
     return true;
   } else {
     console.log(chalk.magenta('la ruta NO es absoluta'));

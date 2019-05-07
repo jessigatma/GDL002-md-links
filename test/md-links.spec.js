@@ -1,10 +1,20 @@
-const mdLinks = require('../');
+const mdLinks = require('../src/main')
 
-
-describe('mdLinks', () => {
-
-  it('should...', () => {
-    console.log('FIX ME!');
-  });
-
+test('should be a file Markdown', done => {
+  function callback(data){
+  expect(findFileMd('README.md')).toBe(true);
+  done();
+  }
+fetchData(callback);
 });
+
+// const mdLinks = require('../');
+
+
+// describe('mdLinks', () => {
+
+//   it('should...', () => {
+//     console.log('FIX ME!');
+//   });
+
+// });
