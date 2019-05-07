@@ -87,10 +87,12 @@ const readFileMd = (pathName) => {
 
 //--------------------MUESTRA EL STATUS DE LOS LINKS OBTENIDOS -----------
 const pathsStatus = (pathName) => {
+  return new Promise((resolve, reject) => {
     fs.readFile(pathName, function (err, data) {
       if (err) {
-        return (err);
+        return reject(err);
       }
+      resolve(data.toString());
       readAllFiles = lookForLinks(pathName, data);
       for (let i = 0; i < readAllFiles.length; i++) {
         fetch(readAllFiles[i].href).then(response => {
@@ -110,6 +112,7 @@ const pathsStatus = (pathName) => {
         });
       }
     })
+  })
 };
 
 //----------- MUESTRA EL TOTAL DE LINKS  ENCONTRADOS (ESTADÍSTICAS DE LINKS)------------------
