@@ -8,4 +8,3 @@ importFiles.readFileMd(pathName);
 importFiles.pathsStatus(pathName);
 importFiles.linksStats(pathName);
 
-//http://eureka.com/
